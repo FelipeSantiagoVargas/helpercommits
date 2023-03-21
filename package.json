@@ -1,16 +1,21 @@
 {
-  "name": "commits",
+  "name": "helpercommits",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
+  "bin":{
+    "helpercommits":"./src/bin.js"
+  },
   "scripts": {
+    "helpercommits":"helpercommits",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "helpercommits":"file://.",
     "standard": "^17.0.0"
   },
   "eslintConfig": {

@@ -1,4 +1,4 @@
-import {intro, outro, select, text, confirm, multiselect} from "@clack/prompts"
+import {intro, outro, select, text, confirm, multiselect, isCancel} from "@clack/prompts"
 import colors from "picocolors"
 import { COMMIT_TYPES } from "./commit-types.js"
 import { getChangedFiles, getStagedFiles, gitAdd, gitCommit } from "./git.js"
@@ -26,6 +26,11 @@ if(stagedFiles.length === 0 && changedFiles.length > 0 ){
         }))
     })
     
+    if(isCancel(files)){
+        outro(colors.yellow('No hay archivos para commitear'))
+        process.exit(0)
+    }
+
     await gitAdd({files})
 }
 
@@ -46,8 +51,8 @@ const commitMsg = await text({
         if(value.length === 0){
             return colors.red('El mensaje no puede estar vacio')
         }
-        if(value.length > 100){
-            return colors.red('El mensaje no puede tener mas de 100 caracteres')
+        if(value.length > 50){
+            return colors.red('El mensaje no puede tener mas de 50 caracteres')
         }
     }
     // placeholder: "Add new feature"
