@@ -3,6 +3,7 @@ import colors from "picocolors"
 import { COMMIT_TYPES } from "./commit-types.js"
 import { getChangedFiles, getStagedFiles, gitAdd, gitCommit } from "./git.js"
 import { trytm } from '@bdsqqq/try'
+import { exitProgram } from "./utils.js"
 
 
 const [changedFiles,errorChangedFiles] = await trytm(getChangedFiles())
@@ -45,6 +46,8 @@ const commitType = await select({
     }))
 })
 
+if (isCancel(commitType)) exitProgram()
+
 const commitMsg = await text({
     message: colors.cyan("Introduce el mensaje del commit:"),
     validate: (value)=>{
@@ -55,8 +58,9 @@ const commitMsg = await text({
             return colors.red('El mensaje no puede tener mas de 50 caracteres')
         }
     }
-    // placeholder: "Add new feature"
 })
+
+if (isCancel(commitMsg)) exitProgram()
 
 const {emoji,release} = COMMIT_TYPES[commitType]
 
@@ -68,6 +72,11 @@ if(release){
             ${colors.yellow('Si la respuesta es si, deberias crear un commit con el tipo "BREAKING CHANGE" y al hacer release se publicara una version major')}
         `
     })
+
+    if(isCancel(breakingChange)){
+        exitProgram()
+    }
+
 }
 
 let commit = `${emoji} ${commitType}: ${commitMsg}`
@@ -84,6 +93,9 @@ if(!shouldContinue){
     outro(colors.yellow('No se ha creado el commit'))
     process.exit(0)
 }
+
+if (isCancel(shouldContinue)) exitProgram()
+
 
 await gitCommit({commit})
 
