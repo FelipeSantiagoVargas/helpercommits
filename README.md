@@ -2,7 +2,9 @@ This project allow you create new commits with a simple structure. You can show 
 
 You should try this program running:
 
+```javascript
 npx helpercommits@latest
+```
 
 ![Menu](./docs/rename.jpg)
 
